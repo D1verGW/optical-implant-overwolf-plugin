@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "sourceMap": true,
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"],
+    "strict": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@overwolf/types",
+      "node"
+    ],
+    "rootDirs": [
+      "./src"
+    ]
+  },
+  "ts-node": {
+    "esm": true
+  },
+  "include": ["src/**/*"]
+}

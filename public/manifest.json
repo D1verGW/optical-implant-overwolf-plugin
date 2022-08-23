@@ -1,0 +1,110 @@
+{
+  "manifest_version": 1,
+  "type": "WebApp",
+  "meta": {
+    "name": "Optical Breacher",
+    "author": "D1ver",
+    "version": "1.0.1",
+    "minimum-overwolf-version": "0.160.0",
+    "description": "An online Cyberpunk 2077 breach protocol minigame solver using camera + OCR",
+    "dock_button_title": "Optical Breacher",
+    "icon": "icons/favicon.png",
+    "icon_gray": "icons/favicon.png",
+    "launcher_icon": "icons/favicon.ico",
+    "window_icon": "icons/favicon.png"
+  },
+  "permissions": [
+    "Hotkeys",
+    "GameInfo"
+  ],
+  "data": {
+    "start_window": "background",
+    "hotkeys": {
+      "sample_app_ts_showhide": {
+        "title": "Show/Hide In-Game Window",
+        "action-type": "toggle",
+        "default": "Ctrl+F"
+      }
+    },
+    "protocol_override_domains": {
+      "googlesyndication": "http"
+    },
+    "externally_connectable": {
+      "matches": [
+        "http://localhost",
+        "https://*.overwolf.com",
+        "https://*.herokuapp.com"
+      ]
+    },
+    "force_browser": "user",
+    "windows": {
+      "background": {
+        "file": "background.html",
+        "background_optimization": false,
+        "is_background_page": true
+      },
+      "in_game": {
+        "file": "in_game.html",
+        "in_game_only": true,
+        "ignore_keyboard_events": true,
+        "disable_rightclick": true,
+        "clickthrough": true,
+        "grab_focus_on_desktop": false,
+        "resizable": false,
+        "transparent": true,
+        "override_on_update": true,
+        "size": {
+          "width": 845,
+          "height": 600
+        },
+        "min_size": {
+          "width": 0,
+          "height": 0
+        }
+      },
+      "glitch": {
+        "file": "glitch.html",
+        "in_game_only": true,
+        "ignore_keyboard_events": true,
+        "disable_rightclick": true,
+        "clickthrough": true,
+        "grab_focus_on_desktop": false,
+        "resizable": false,
+        "transparent": true,
+        "override_on_update": true,
+        "size": {
+          "width": 845,
+          "height": 600
+        },
+        "min_size": {
+          "width": 0,
+          "height": 0
+        }
+      }
+    },
+    "game_targeting": {
+      "type": "dedicated",
+      "game_ids": [
+        21664,
+        216641
+      ]
+    },
+    "game_events": [],
+    "launch_events": [
+      {
+        "event": "GameLaunch",
+        "event_data": {
+          "game_ids": [
+            216641
+          ]
+        },
+        "start_minimized": false
+      }
+    ],
+    "developer": {
+      "enable_auto_refresh": true,
+      "reload_delay": 1000,
+      "filter": "*.*"
+    }
+  }
+}
