@@ -1,5 +1,12 @@
 import chunk from 'lodash/chunk';
-import { CURRENT_TOOL_TEXT_POSITION, MATRIX_POSITION, TARGETS_POSITION } from '../consts';
+import {
+    CURRENT_TOOL_TEXT_POSITION,
+    MATRIX_POSITION,
+    MATRIX_POSITION_5X5,
+    TARGETS_POSITION,
+    TARGETS_POSITION_5X5,
+} from '../consts';
+import { LocalOcr } from '../local-ocr';
 import { processMatrix, processTargets } from '../utils';
 import { OverwolfApi } from '../overwolf-api';
 import { OCR } from './ocr';
@@ -7,17 +14,27 @@ import { solve } from './solver';
 
 export class OpticalImplant {
     private ocr: OCR;
+    private localOcr: LocalOcr;
 
     constructor() {
         this.ocr = new OCR();
+        this.localOcr = new LocalOcr();
     }
 
     private getMatrixScreenshotImage = (src: string): Promise<HTMLCanvasElement> => {
         return OverwolfApi.getBlackAndWhiteScreenshotImage(src, MATRIX_POSITION);
     };
 
+    private getMatrix5X5ScreenshotImage = (src: string): Promise<HTMLCanvasElement> => {
+        return OverwolfApi.getBlackAndWhiteScreenshotImage(src, MATRIX_POSITION_5X5);
+    };
+
     private getTargetsScreenshotImage = (src: string): Promise<HTMLCanvasElement> => {
         return OverwolfApi.getBlackAndWhiteScreenshotImage(src, TARGETS_POSITION);
+    };
+
+    private getTargets5X5ScreenshotImage = (src: string): Promise<HTMLCanvasElement> => {
+        return OverwolfApi.getBlackAndWhiteScreenshotImage(src, TARGETS_POSITION_5X5);
     };
 
     private getCurrentToolTextScreenshot = (src: string): Promise<HTMLCanvasElement> => {
@@ -31,7 +48,7 @@ export class OpticalImplant {
 
         await OverwolfApi.removeStorage();
 
-        const ocrResult = await this.ocr.recognize(screenshot, 'rus');
+        const ocrResult = await this.localOcr.recognize(screenshot, 'rus', screenshot.width, screenshot.height);
 
         console.log('ocrResult.text', ocrResult.text, ocrResult);
 
@@ -44,14 +61,20 @@ export class OpticalImplant {
         const screenshotUrl = await OverwolfApi.takeScreenshot();
         const matrixScreenshot = await this.getMatrixScreenshotImage(screenshotUrl);
         const targetsScreenshot = await this.getTargetsScreenshotImage(screenshotUrl);
-        await OverwolfApi.removeStorage();
 
-        const [matrixData, targetsData] = [await this.ocr.recognize(matrixScreenshot, 'cyber'), await this.ocr.recognize(targetsScreenshot, 'cyber')];
+        let [matrixData, targetsData] = [await this.ocr.recognize(matrixScreenshot, 'cyber'), await this.ocr.recognize(targetsScreenshot, 'cyber')];
 
         console.log('OcrService result:', matrixData, targetsData);
 
         if (matrixData.text.length === 0 || targetsData.text.length === 0) {
             return;
+        }
+
+        if (matrixData?.lines?.length === 5) {
+            const matrix5x5Screenshot = await this.getMatrix5X5ScreenshotImage(screenshotUrl);
+            const targets5x5screenshot = await this.getTargets5X5ScreenshotImage(screenshotUrl);
+
+            [matrixData, targetsData] = [await this.ocr.recognize(matrix5x5Screenshot, 'cyber'), await this.ocr.recognize(targets5x5screenshot, 'cyber')];
         }
 
         const { lines: matrix, chars } = processMatrix(matrixData.text);
@@ -105,6 +128,12 @@ export class OpticalImplant {
         // TODO: take care about smaller matrix size
 
         // TODO: take care about game resolution
+        if (matrix.length === 5) {
+            result.style.top = '75px';
+            result.style.left = '210px';
+        }
+
+        // TODO: take care about game resolution
         if (matrix.length === 6) {
             result.style.top = '75px';
             result.style.left = '165px';
@@ -148,6 +177,8 @@ export class OpticalImplant {
 
             result.appendChild(rowEl);
         });
+
+        await OverwolfApi.removeStorage();
 
         return result;
     };

@@ -42,16 +42,6 @@ export abstract class OverwolfApi {
                 ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
 
                 resolve(canvas);
-
-                if (process.env.NODE_ENV !== 'production') {
-                    const logImg = document.createElement('img');
-                    logImg.src = canvas.toDataURL();
-                    logImg.style.visibility = 'none';
-                    logImg.width = 0;
-                    logImg.height = 0;
-
-                    document.body.appendChild(logImg);
-                }
             };
 
             img.src = screenshotUrl;
@@ -62,6 +52,16 @@ export abstract class OverwolfApi {
         const canvasImage = await OverwolfApi.getScreenshotImage(screenshotUrl, pictureBoundaries);
 
         threshold(canvasImage.getContext('2d'));
+
+        if (process.env.NODE_ENV !== 'production') {
+            const logImg = document.createElement('img');
+            logImg.src = canvasImage.toDataURL();
+            logImg.style.visibility = 'none';
+            logImg.width = 0;
+            logImg.height = 0;
+
+            document.body.appendChild(logImg);
+        }
 
         return canvasImage;
     };
