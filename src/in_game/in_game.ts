@@ -44,6 +44,7 @@ class InGame extends AppWindow {
         overwolf.windows.changeSize(this.currentWindowId, 845, 900);
         overwolf.windows.changePosition(this.currentWindowId, InGameWindowPosition.x, InGameWindowPosition.y);
         this.currWindow.minimize();
+        this.hidePreloader();
     };
 
     private showPreloader() {
@@ -92,23 +93,25 @@ class InGame extends AppWindow {
     private hackTerminal = async () => {
         this._moduleContainer.innerHTML = '';
 
-        const result = await this._opticalImplant.hackTerminal();
+        try {
+            const result = await this._opticalImplant.hackTerminal();
 
-        if (!result) {
-            console.warn('hacking failed');
-            return;
+            if (!result) {
+                console.warn('hacking failed');
+                return;
+            }
+
+            this._moduleContainer.appendChild(result);
+
+            await this.currWindow.restore();
+
+            overwolf.games.inputTracking.onMouseDown.addListener(this.finishHackingListener);
+            overwolf.games.inputTracking.onKeyUp.addListener(this.finishHackingListener);
+        } finally {
+            setTimeout(() => {
+                this.hidePreloader();
+            }, 1000);
         }
-
-        this._moduleContainer.appendChild(result);
-
-        await this.currWindow.restore();
-
-        overwolf.games.inputTracking.onMouseDown.addListener(this.finishHackingListener);
-        overwolf.games.inputTracking.onKeyUp.addListener(this.finishHackingListener);
-
-        setTimeout(() => {
-            this.hidePreloader();
-        }, 1000);
     };
 
     public static instance = () => {
