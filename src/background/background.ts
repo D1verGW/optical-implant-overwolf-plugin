@@ -5,6 +5,7 @@ import {
 } from '@overwolf/overwolf-api-ts';
 
 import { kWindowNames, kGameClassIds } from "../consts";
+import httpTransport from '../http-transport';
 
 import RunningGameInfo = overwolf.games.RunningGameInfo;
 import AppLaunchTriggeredEvent = overwolf.extensions.AppLaunchTriggeredEvent;
@@ -51,6 +52,8 @@ class BackgroundController {
     this._gameListener.start();
 
     this.eachWindow(w => w.restore());
+
+    httpTransport.get('/wake-up-neo');
   }
 
   private eachWindow(cb) {
