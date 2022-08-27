@@ -46,6 +46,14 @@ class BackgroundController {
     return BackgroundController._instance;
   }
 
+  public static checkRemoteImplantServices() {
+    try {
+      httpTransport.get('/wake-up-neo');
+    } catch (e) {
+      console.warn('Something went wrong with remote implant services', e);
+    }
+  }
+
   // When running the app, start listening to games' status and decide which window should
   // be launched first, based on whether a supported game is currently running
   public async run() {
@@ -53,11 +61,9 @@ class BackgroundController {
 
     this.eachWindow(w => w.restore());
 
-    try {
-      httpTransport.get('/wake-up-neo');
-    } catch (e) {
-      console.warn('Something went wrong with remote implant services', e);
-    }
+    BackgroundController.checkRemoteImplantServices();
+
+    setInterval(BackgroundController.checkRemoteImplantServices, 10 * 1000 * 60);
   }
 
   private eachWindow(cb) {
