@@ -53,7 +53,11 @@ class BackgroundController {
 
     this.eachWindow(w => w.restore());
 
-    httpTransport.get('/wake-up-neo');
+    try {
+      httpTransport.get('/wake-up-neo');
+    } catch (e) {
+      console.warn('Something went wrong with remote implant services', e);
+    }
   }
 
   private eachWindow(cb) {
