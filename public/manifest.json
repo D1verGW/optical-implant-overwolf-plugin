@@ -2,16 +2,17 @@
   "manifest_version": 1,
   "type": "WebApp",
   "meta": {
-    "name": "Optical Breacher",
-    "author": "D1ver",
-    "version": "1.0.1",
+    "name": "Optical Implant",
+    "author": "Arsentii Hrybok",
+    "version": "2.0.0",
     "minimum-overwolf-version": "0.160.0",
     "description": "An online Cyberpunk 2077 breach protocol minigame solver using camera + OCR",
-    "dock_button_title": "Optical Breacher",
-    "icon": "icons/favicon.png",
-    "icon_gray": "icons/favicon.png",
+    "dock_button_title": "Optical Implant",
+    "icon": "icons/icon.png",
+    "icon_gray": "icons/icon_gray.png",
     "launcher_icon": "icons/favicon.ico",
-    "window_icon": "icons/favicon.png"
+    "splash_image": "icons/splash_image.png",
+    "window_icon": "icons/window_icon.png"
   },
   "permissions": [
     "Hotkeys",
@@ -20,7 +21,7 @@
   "data": {
     "start_window": "background",
     "hotkeys": {
-      "sample_app_ts_showhide": {
+      "show_hide_ingame_window": {
         "title": "Show/Hide In-Game Window",
         "action-type": "toggle",
         "default": "Ctrl+F"
@@ -33,7 +34,8 @@
       "matches": [
         "http://localhost",
         "https://*.overwolf.com",
-        "https://*.herokuapp.com"
+        "https://*.herokuapp.com",
+        "https://*.run.app"
       ]
     },
     "force_browser": "user",

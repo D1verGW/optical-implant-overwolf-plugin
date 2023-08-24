@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  cyberpunk-overlay-frontend:
+    image: cyberpunk-overlay-frontend:latest
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node:16
+        WORKDIR /app
+        COPY package.json yarn.lock ./
+        RUN yarn install
+        COPY . .
+    volumes:
+      - ./dist:/app/dist
+    command: yarn build
